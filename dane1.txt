@@ -1,0 +1,6 @@
+5
+Wroclaw-Poznan
+Legnica-Opole
+Poznan-Szczecin
+Kluczbork-Opole
+Wroclaw-Legnica
