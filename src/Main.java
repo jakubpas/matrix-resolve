@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -90,39 +89,26 @@ public class Main {
 
     private static Integer[] findOtherFromColumn(Integer[] pair) {
         Integer[] tmp = new Integer[2];
-        for (int x = 0; x <= matrix.length - 1; x++) {
-            int rowSum = 0;
             for (int y = 0; y <= matrix.length - 1; y++) {
-                rowSum = rowSum + matrix[x][y];
-                if (matrix[x][y] == 1) {
-                    tmp[0] = x;
-                    tmp[1] = y;
-                }
-                if (rowSum == 2 && pair[0] == x) {
+                tmp[0] = pair[0];
+                tmp[1] = y;
+                if (matrix[pair[0]][y] == 1 && y!=pair[1]) {
                     return tmp;
                 }
-            }
         }
         return tmp;
     }
 
     private static void algorithm() {
-
         Integer[] start = findOne(null);
         Integer[] stop = findOne(start);
+        Integer[] pair;
         orderedCities.add(start[0]);
+        pair = start;
+        for (int i = 0; i <= cities.size()-3; i++) {
+            pair = findOtherFromColumn(reverse(pair));
+            orderedCities.add(pair[0]);
+        }
         orderedCities.add(stop[0]);
-        return;
-
-//        Integer[] pair;
-//        orderedCities.add(start[0]);
-//        pair = start;
-//        for (int i = 0; i <= cities.size()-2; i++) {
-//            pair = findOtherFromColumn(pair);
-//            orderedCities.add(pair[0]);
-//            pair = reverse(pair);
-//
-//        }
-//        orderedCities.add(stop[0]);
     }
 }
