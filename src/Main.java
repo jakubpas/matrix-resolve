@@ -1,7 +1,9 @@
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class Main {
@@ -9,12 +11,12 @@ public class Main {
     private static List<String> cities = new ArrayList<>();
     private static List<Integer> orderedCities = new ArrayList<>();
     private static List<Integer[]> pairs = new ArrayList<>();
-    private static int[][] matrix = new int[cities.size()][cities.size()];
-
+    private static int[][] matrix;
 
     public static void main(String[] args) throws IOException {
         fromFile("dane1.txt");
-//        System.out.println(cities);
+        System.out.println(cities);
+        pairs.forEach(integers -> System.out.println(cities.get(integers[0]) + " " + cities.get(integers[1])));
         matrix();
         algorithm();
         orderedCities.forEach(integer -> System.out.println(cities.get(integer)));
@@ -41,6 +43,7 @@ public class Main {
     }
 
     private static void matrix() {
+        matrix = new int[cities.size()][cities.size()];
         pairs.forEach(integers -> {
             matrix[integers[0]][integers[1]] = 1;
             matrix[integers[1]][integers[0]] = 1;
@@ -56,19 +59,25 @@ public class Main {
 
     private static Integer[] findOne(Integer[] skip) {
         Integer[] tmp = new Integer[2];
-        for (int x = 0; x < matrix.length; x++) {
+        for (int x = 0; x <= matrix.length - 1; x++) {
             int rowSum = 0;
-            for (int y = 0; y <= matrix.length; y++) {
-                rowSum = rowSum + matrix[x][y];
+            for (int y = 0; y <= matrix.length - 1; y++) {
+                rowSum = rowSum + matrix[y][x];
                 if (matrix[x][y] == 1) {
                     tmp[0] = x;
                     tmp[1] = y;
                 }
-                if (rowSum == 1 && !Arrays.equals(tmp, skip)) {
-                    return tmp;
-                }
+            }
+            if (skip!=null) {
+                System.out.println(tmp[0] + ","+tmp[1] + " " + skip[0] + "," + skip[1]);
+                System.out.println(Arrays.equals(tmp, skip));
+                System.out.println();
+            }
+            if (rowSum == 1 && !Arrays.equals(tmp, skip)) {
+                return tmp;
             }
         }
+        System.out.println("dupa");
         return tmp;
     }
 
@@ -81,11 +90,11 @@ public class Main {
 
     private static Integer[] findOtherFromColumn(Integer[] pair) {
         Integer[] tmp = new Integer[2];
-        for (int x = 0; x < matrix.length; x++) {
+        for (int x = 0; x <= matrix.length - 1; x++) {
             int rowSum = 0;
-            for (int y = 0; y <= matrix.length; y++) {
+            for (int y = 0; y <= matrix.length - 1; y++) {
                 rowSum = rowSum + matrix[x][y];
-                if (matrix[x][y] == 2) {
+                if (matrix[x][y] == 1) {
                     tmp[0] = x;
                     tmp[1] = y;
                 }
@@ -101,15 +110,19 @@ public class Main {
 
         Integer[] start = findOne(null);
         Integer[] stop = findOne(start);
-        Integer[] pair;
         orderedCities.add(start[0]);
-        pair = start;
-        for (int i = 0; i <= cities.size(); i++) {
-            pair = findOtherFromColumn(pair);
-            orderedCities.add(pair[0]);
-            pair = reverse(pair);
+        orderedCities.add(stop[0]);
+        return;
 
-        }
-        orderedCities.add(stop[1]);
+//        Integer[] pair;
+//        orderedCities.add(start[0]);
+//        pair = start;
+//        for (int i = 0; i <= cities.size()-2; i++) {
+//            pair = findOtherFromColumn(pair);
+//            orderedCities.add(pair[0]);
+//            pair = reverse(pair);
+//
+//        }
+//        orderedCities.add(stop[0]);
     }
 }
